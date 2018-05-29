@@ -1,0 +1,30 @@
+version: '2'
+services:
+ web:
+   image: tom4to/tctf2018_web
+   depends_on:
+    - mysql
+   ports:
+    - "8080:8080"
+   networks:
+    vpcbr:
+      ipv4_address: 10.5.0.5
+
+ mysql:
+   image: mysql:5
+   environment:
+    - MYSQL_ROOT_PASSWORD=123456
+    - MYSQL_DATABASE=report
+   volumes:
+    - ./report.sql:/docker-entrypoint-initdb.d/report.sql
+   networks:
+    vpcbr:
+      ipv4_address: 10.5.0.6
+
+networks:
+  vpcbr:
+    driver: bridge
+    ipam:
+     config:
+       - subnet: 10.5.0.0/16
+         gateway: 10.5.0.1
